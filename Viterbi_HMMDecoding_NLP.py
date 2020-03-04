@@ -17,7 +17,7 @@ if __name__== "__main__":
 
     #trans_prob = { 'healthy' : {'healthy' : 0.7, 'fever' : 0.3},'fever':{'healthy':0.4,'fever':0.6}}
 
-    trans_prob = {}
+    trans_prob = {}   #Storing the trasition probabilities                  
     trans_prob['NNP']=  {'NNP':0.3777,'MD':0.0110,'VB':0.0009,'JJ':0.0084,'NN':0.0584,'RB':0.0090,'DT':0.0025}
     trans_prob['MD']=   {'NNP':0.0008,'MD':0.0002,'VB':0.7968,'JJ':0.0005,'NN':0.0008,'RB':0.1698,'DT':0.0041}
     trans_prob['VB']=   {'NNP':0.0322,'MD':0.0005,'VB':0.0050,'JJ':0.0837,'NN':0.0615,'RB':0.0514,'DT':0.2231}
@@ -33,7 +33,7 @@ if __name__== "__main__":
     #     'fever' : {'normal':0.1,'cold':0.3,'dizzy':0.6}
     # }
 
-    emission_prob = {}
+    emission_prob = {}              #storing the emission probabilities
 
     emission_prob['NNP']={'Janet':0.000032,'will':0,'back':0,'the':0.000048,'bill':0}
     emission_prob['MD']={'Janet':0,'will':0.308431,'back':0,'the':0,'bill':0}
@@ -54,7 +54,7 @@ if __name__== "__main__":
     #print(final_tag);
 
 
-    for o in range(1,len(observations)):
+    for o in range(1,len(observations)):                        #Calculating for each observation
         for s in range(0,len(states)):
             st = states[s]
             ob = observations[o]
@@ -64,17 +64,17 @@ if __name__== "__main__":
                 temp = final_tag[states[x]][(prev_obs,states[x])]   
                 cal = temp* trans_prob[states[x]][st]
                 maxprob_val = max(cal,maxprob_val)
-            final_tag[st][(ob,st)] = emission_prob[st][ob]*maxprob_val
+            final_tag[st][(ob,st)] = emission_prob[st][ob]*maxprob_val          #Backpointer case over here i.e getting the max value
 
 
-    print(final_tag)
+    #print(final_tag)
     
     tag_assign = {}
 
     for x in observations:
         max_tag_value = -1
         tag = 0
-        for y in final_tag:
+        for y in final_tag:                         #Selecting the best tag based on the maximum probability among the generated
             for z in final_tag[y]:
                 #print(z)
                 if(z[0]==x):
