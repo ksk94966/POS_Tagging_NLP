@@ -142,15 +142,3 @@ if __name__== "__main__":
     print(fin_generated_string)                     #printing the output
             
 
-
-        
-
-
-            
-
-    
-
-
-                
-
-
