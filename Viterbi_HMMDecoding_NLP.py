@@ -3,13 +3,20 @@ import re
 
 if __name__== "__main__":
 
+    # path = sys.argv[1]    #for getting filename as argument
+    # f = open(path,"r")
+
+    input_sent = sys.argv[1]
+
+    observations = input_sent.strip().split(" ")
+
     #states = ['healthy','fever']
 
     states = ['NNP','MD','VB','JJ','NN','RB','DT']
 
     #observations = ['normal', 'cold' , 'dizzy']
 
-    observations = ['Janet','will','back','the','bill']
+    #observations = ['Janet','will','back','the','bill']
 
     #start_prob = {'healthy': 0.6,'fever' : 0.4}
 
@@ -46,53 +53,83 @@ if __name__== "__main__":
 
     final_tag =  {s:{} for s in states}
 
+    best_tag = {}
 
-    for s in states:
+    temp_tag = "rand1"
+    temp_high = -1
+    for s in states:                            #Storing the intial states and observations
         o = observations[0]
-        final_tag[s][(o,s)] = start_prob[s]*emission_prob[s][o];
-
-    #print(final_tag);
+        temp_val = start_prob[s]*emission_prob[s][o]
+        final_tag[s][(o,s)] = temp_val
+        if temp_val>temp_high:
+            o = list([s])
+            best_tag[s] = o
+    
+    #print(final_tag)
+    #print(best_tag)
 
 
     for o in range(1,len(observations)):                        #Calculating for each observation
         for s in range(0,len(states)):
             st = states[s]
             ob = observations[o]
-            maxprob_val = 0
+            maxprob_val = -1000
+            temp_tag = "rand"
             for x in range(0,len(states)):
                 prev_obs = observations[o-1]      
                 temp = final_tag[states[x]][(prev_obs,states[x])]   
                 cal = temp* trans_prob[states[x]][st]
-                maxprob_val = max(cal,maxprob_val)
-            final_tag[st][(ob,st)] = emission_prob[st][ob]*maxprob_val          #Backpointer case over here i.e getting the max value
+                if cal>maxprob_val:
+                    maxprob_val = cal
+                    temp_tag = states[x]
+            best_tag[st].append(temp_tag)                       #Backpointer - here kept track of the state
+            final_tag[st][(ob,st)] = emission_prob[st][ob]*maxprob_val          
 
 
     #print(final_tag)
-    
+    #print(best_tag)
+
     tag_assign = {}
 
-    for x in observations:
-        max_tag_value = -1
-        tag = 0
-        for y in final_tag:                         #Selecting the best tag based on the maximum probability among the generated
-            for z in final_tag[y]:
-                #print(z)
-                if(z[0]==x):
-                    if max_tag_value<final_tag[y][z]:
-                        max_tag_value = final_tag[y][z]
-                        #print(z[1])
-                        tag = z[1]
-        tag_assign[x] = tag
+    x = observations[len(observations)-1]
+    max_tag_value = -2000
+    tag = 0
+    for y in final_tag:                         #Selecting the best tag based on the maximum probability among the generated
+        for z in final_tag[y]:
+            #print(z)
+            if(z[0]==x):
+                if max_tag_value<final_tag[y][z]:
+                    max_tag_value = final_tag[y][z]
+                    #print(z[1])
+                    tag = z[1]
+    best_tag['final'] = dict() 
+    best_tag['final'][len(observations)] = (tag,max_tag_value)
+    
+    start = 'final'
+    
+    final_tags_list = [best_tag['final'][len(observations)][0]]
+    #print(best_tag[start])
+    finaltag_prob = [best_tag['final'][len(observations)][1]]
+    for i in range(len(observations),0,-1):   
+        if i!=len(observations):
+            #print(start)
+            final_tags_list.append(start)
+        #print(start)
+        if i== len(observations):
+            temp_s = best_tag[start][i][0]
+        else :
+            temp_s = best_tag[start][i]
+        start = best_tag[temp_s][i-1]
+        
 
+    #Assigning tags to the sentence
+    final_str = ""
+    for i in range(len(final_tags_list)-1,-1,-1):
+        tem = observations[len(observations)-i-1]
+        #print(tem)
+        final_str += tem+"_"+final_tags_list[i]+" "
+    
+    print("Input sentence after POS tagging\n",final_str)
 
-    print(tag_assign)
-
-
-
-
-
-
-
-
-
+    print("Probability of the seqeunce:\n",best_tag['final'][len(observations)][1])
 

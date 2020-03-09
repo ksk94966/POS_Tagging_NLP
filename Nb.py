@@ -132,13 +132,15 @@ if __name__== "__main__":
 
     besttag_combination = max(prob_allcomb, key=prob_allcomb.get)  #Selecting the best probability tag
 
-    #print(besttag_combination)
 
     fin_generated_string = ""                            #For storing the output
 
     for i in range(0,len(besttag_combination)):
         fin_generated_string += ls_str[i] + "_" + besttag_combination[i] + " ";
 
-    print(fin_generated_string)                     #printing the output
+    print("Input sentence after POS tagging:\n",fin_generated_string)                     #printing the output
+
+    print("Best tag combination is:",besttag_combination)
+    print("Its probability is:",prob_allcomb[besttag_combination])
             
 
