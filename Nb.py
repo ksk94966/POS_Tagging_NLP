@@ -76,7 +76,7 @@ if __name__== "__main__":
     #print(prob_wordTag[('is','VBZ')])                       #testing the probabilities
     #print(prob_tagTag[('NN','DT')])                         #testing the probabilities
 
-    given_str = sys.argv[2];
+    given_str = sys.argv[2];                                 #getting the input sentence
 
     #ls_str = re.split(r'[;,\s]\s*', given_str)
     ls_str = given_str.strip().split(" ");                #Storing the given string in a list

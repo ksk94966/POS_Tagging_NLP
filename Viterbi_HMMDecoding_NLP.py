@@ -10,19 +10,9 @@ if __name__== "__main__":
 
     observations = input_sent.strip().split(" ")
 
-    #states = ['healthy','fever']
-
     states = ['NNP','MD','VB','JJ','NN','RB','DT']
 
-    #observations = ['normal', 'cold' , 'dizzy']
-
-    #observations = ['Janet','will','back','the','bill']
-
-    #start_prob = {'healthy': 0.6,'fever' : 0.4}
-
     start_prob = {'NNP':0.2767,'MD':0.0006,'VB':0.0031,'JJ':0.0453,'NN':0.0449,'RB':0.0510,'DT':0.2026}
-
-    #trans_prob = { 'healthy' : {'healthy' : 0.7, 'fever' : 0.3},'fever':{'healthy':0.4,'fever':0.6}}
 
     trans_prob = {}   #Storing the trasition probabilities                  
     trans_prob['NNP']=  {'NNP':0.3777,'MD':0.0110,'VB':0.0009,'JJ':0.0084,'NN':0.0584,'RB':0.0090,'DT':0.0025}
@@ -32,13 +22,6 @@ if __name__== "__main__":
     trans_prob['NN']=   {'NNP':0.0096,'MD':0.0176,'VB':0.0014,'JJ':0.0086,'NN':0.1216,'RB':0.0177,'DT':0.0068}
     trans_prob['RB']=   {'NNP':0.0068,'MD':0.0102,'VB':0.1011,'JJ':0.1012,'NN':0.0120,'RB':0.0728,'DT':0.0479}
     trans_prob['DT']=   {'NNP':0.1147,'MD':0.0021,'VB':0.0002,'JJ':0.2157,'NN':0.4744,'RB':0.0102,'DT':0.0017}
-
-    
-
-    # emission_prob = {
-    #     'healthy' : {'normal':0.5,'cold':0.4,'dizzy':0.1},
-    #     'fever' : {'normal':0.1,'cold':0.3,'dizzy':0.6}
-    # }
 
     emission_prob = {}              #storing the emission probabilities
 
@@ -68,7 +51,6 @@ if __name__== "__main__":
     #print(final_tag)
     #print(best_tag)
 
-
     for o in range(1,len(observations)):                        #Calculating for each observation
         for s in range(0,len(states)):
             st = states[s]
@@ -84,7 +66,6 @@ if __name__== "__main__":
                     temp_tag = states[x]
             best_tag[st].append(temp_tag)                       #Backpointer - here kept track of the state
             final_tag[st][(ob,st)] = emission_prob[st][ob]*maxprob_val          
-
 
     #print(final_tag)
     #print(best_tag)
